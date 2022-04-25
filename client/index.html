@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Plant Nursery</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css?family=Bitter|Boogaloo|Irish+Grover&display=swap" rel="stylesheet">
+        
+    </head>
+    <body>
+        <div id="app">
+            <div class="menubar" >
+                <img class="logo" src="logo.png" alt="logo" height=100px; width=7%>
+                <div class="rpcontainer">
+                <h1>Planted Roots Nursery</h1>
+                <div class="menu rpcontainer">
+                
+                <div v-on:click="showHome">Home</div>
+                <div v-on:click="showPage">Plants</div>
+                <div>Account</div>
+                </div>
+                </div>
+                </div>
+                <div id="circle"></div>
+                <div class="heading imgtext ">Create your own garden <br> 
+                    <button class="button1">Get Started</button></div>
+                    <img class="hero" src="plant2.jpg" height=470px; width=100%>
+                <!-- THE ABOUT AND LOG IN AREA -->
+                <!-- <img src="plant.jpeg" height=500px; width=100%> -->
+
+                <div class="rpcontainer" v-if=home>
+                    <div class="ccontainer p">
+                        <div class="form">Lets get started</div>
+                        <div>Welcome to Planted Roots Nursery, we offer a wide variety of plants. You can make account and create a list of plants you'd like to add to your garden.  </div>
+                        <button class="button1" v-on:click="addPlant"> Add a plant</button>
+
+                    </div>
+                    
+                    <div class="ccontainer r">
+                        <div class="form">Create Account</div>
+                        <div>
+                            <label>First Name:</label>
+                            <input class="input" type="text"><br>
+                            <label>Last Name:</label>
+                            <input class="input" type="text">
+                            <label>Email:</label>
+                            <input class="input" type ="email">
+                            <label>Password:</label>
+                            <input class="input" type="password">
+                            <button class="button1">Sign up</button>
+                            or 
+                            <button class="button1">Log in</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- LINKS FOR APP -->
+                <div class="rcontainer">
+                    <div class="container">
+                        <button class="button1" v-on:click="showPage">All Plants</button>
+                        <img  v-on:click="showPage" src="home.jpeg" height=200px; width=200px;>
+                    </div>
+                    <div class= "container">
+                        <button class="button1"  v-on:click="filterButtonClicked('Flower'),page='Flower'">Flowers</button>
+                        <img  v-on:click="filterButtonClicked('Flower'),page='Flower'" src="flower.jpg" height=200px; width=200px;>
+                    </div>
+                    <div class= "container">
+                        <button class="button1" v-on:click="filterButtonClicked('Shrub'),page='Shrub'">Shrubs</button>
+                        <img  v-on:click="filterButtonClicked('Shrub'),page='Shrub'" src="shrub.jfif" height=200px; width=200px;>
+                    </div>
+                    <div class= "container">
+                        <button class="button1" v-on:click="filterButtonClicked('Tree'),page='Tree'">Trees</button>
+                        <img  v-on:click="filterButtonClicked('Tree'),page='Tree'" src="tree.jfif" height=200px; width=200px;>
+                    </div>
+                    <div class="container">
+                        <button class="button1" v-on:click="filterButtonClicked('Other'),page='Other'">Other</button>
+                        <img v-on:click="filterButtonClicked('Other'),page='Other'"src="p.jpg" height=200px; width=200px;>
+
+                    </div>
+                </div>
+
+
+                <!-- FILTERED PLANTS SHOWN HERE AFTER LINK CLICKED -->
+                <div v-if=pageshow>
+                    <button class="button1" v-on:click="addPlant"> Add a plant</button><br>
+                    <span class="head">About {{ page }}s</span><br>
+                    <p class="ccontainer p" v-bind="descriptionoftype(page)">{{typeDescription}}</p>
+                    <div class="head">{{ page }} Plants</div>
+                    <ul class="plants">
+                        <div class="allplants"> 
+                            <li class="thiscontainer" v-for="plant in typeShown">
+                            <img v-bind:src="plant.name+'.jpg'"  height=150px; width=150px;>
+                            <div class="namebold"><br>
+                                {{ plant.name }}<br>
+                            </div>
+                            <div>
+                                Climate: {{plant.climate}}<br>
+                            </div>
+                            <div>
+                                Type: {{plant.type}}
+                            </div>
+                            <div>
+                                {{plant.description}}
+                            </div>
+                            <button class="button1" v-on:click="deleteButtonClicked(plant._id)">Delete</button>
+                            <button class="button1" v-on:click="Edit(plant._id,plant.name,plant.climate,plant.type, plant.description)">Edit</button>
+                        </li>
+                    </div>
+                </ul>
+                </div>
+            
+            <!-- ADDING A NEW PLANT -->
+            <div v-if="showCreatePlant" class="center"> 
+                <div id="edit-form">
+                <div id="formedit">
+                <div class="head">Add Plant</div><br>
+                <label >Name:</label>
+                <input class="input" type="text" v-model="newPlantName"><br>
+                <label >Climate:</label>
+                <input class="input" type="text" v-model="newPlantClimate"><br>
+                <label >Type:</label>
+                <select class="input" v-model="newPlantType">
+                    <option disabled value="">Please select one</option>
+                    <option>Tree</option>
+                    <option>Flower</option>
+                    <option>Shrub</option>
+                    <option>Other</option>
+                </select><br>
+                <label >Description:</label>
+                <input id="textfield" class="input" type="text" v-model="newPlantDescription"><br>
+                <br><br>
+                <button class="button1" v-on:click="AddButtonClicked">Add</button>
+                <button class="button1" v-on:click="close">Close</button>
+                <div id="errors" v-if="errors.length">
+                    Errors in adding plant
+                    <ul>
+                        <li class="errors" v-for="error in errors">
+                            {{error}}
+                        </li>
+                    </ul>
+                </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- SHOWING ALL THE PLANTS -->
+            <div class="center"v-if=showAllofPlants> 
+                <button class="button1" v-on:click="addPlant"> Add a plant</button><br>
+                <div class="head">All Plants</div>
+                    <ul class="plants">
+                        <div class="allplants">
+                            <li class="thiscontainer" v-for="plant in plants">
+                                <img v-bind:src="plant.name+'.jpg'" height=150px; width=150px;>
+                                <div class="namebold"><br>
+                                    {{ plant.name }}<br>
+                                </div>
+                                <div>
+                                    Climate: {{plant.climate}}<br>
+                                </div>
+                                <div>
+                                    Type: {{plant.type}}
+                                </div>
+                                <div>
+                                    {{plant.description}}
+                                </div>
+                                <button class="button1" v-on:click="deleteButtonClicked(plant._id)">Delete</button>
+                                <button class="button1" v-on:click="Edit(plant._id,plant.name,plant.climate,plant.type, plant.description)">Edit</button>
+                                
+                            </li>
+                        </div>
+                    </ul> 
+            </div>
+
+            <!-- EDITING A PLANT  -->
+            <div v-if="editplant">
+                <div id="edit-form">
+                    <div id="formedit">
+                        <div class="form" >Edit Plant</div><br>
+                        <label >Name:</label>
+                        <input class="input" type="text" v-model="editname"><br>
+                        <label >Climate:</label>
+                        <input class="input" type="text" v-model="editclimate"><br>
+                        <label >Type:</label>
+                        <select class="input" v-model="editType">
+                            <option disabled value="">Please select one</option>
+                            <option>Tree</option>
+                            <option>Flower</option>
+                            <option>Shrub</option>
+                            <option>Other</option>
+                        </select><br>
+                        <label >Description:</label>
+                        <input id="textfield" class="input" type="text" v-model="editDescription"><br>
+                        <br><br>
+                        <button class="button1" v-on:click="updateButtonClicked()">Save</button>
+                        <button class="button1" v-on:click="close">Cancel</button>
+                        <!-- <div id="errors" v-if="errors.length">
+                            Errors in adding plant
+                            <ul>
+                                <li class="plants" v-for="error in errors">
+                                    {{error}}
+                                </li>
+                            </ul>
+                        </div> -->
+                    </div>
+                </div>
+        </div>        
+    </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="app.js"></script>
+    </body>
+    
+    </html>
